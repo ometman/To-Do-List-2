@@ -343,8 +343,7 @@
     "yallist": "^3.1.1",
     "yaml": "^1.10.2",
     "yargs-parser": "^20.2.9",
-    "zwitch": "^1.0.5",
-    "homepage": "https://ometman.github.io/to-do-list"
+    "zwitch": "^1.0.5"
   },
   "scripts": {
     "deploy": "gh-pages -d dist",
@@ -354,13 +353,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ometman/to-do-list.git"
+    "url": "git+https://github.com/ometman/To-Do-List-2.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ometman/to-do-list/issues"
+    "url": "https://github.com/ometman/To-Do-List-2.git/issues"
   },
-  "homepage": "https://ometman.github.io/to-do-list/"
+  "homepage": ""
 }
