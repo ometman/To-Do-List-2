@@ -7,6 +7,7 @@ import * as bootstrap from 'bootstrap';
 import { displayTasks } from '../modules/showTasks.js';
 import { addNewTask } from '../modules/addTask.js';
 import { removeTask } from '../modules/removeTask.js';
+import { editTask } from '../modules/editTask.js';
 import { changeIcon } from '../modules/changeIcon.js';
 
 window.onload = () => {
@@ -30,6 +31,8 @@ window.onload = () => {
 
   // adding new task
   addNewTask();
+  // editing tasking
+  editTask();
   // change icon on hover
   changeIcon();
 };
