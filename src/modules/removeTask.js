@@ -1,11 +1,21 @@
-// import { displayTasks } from './showTasks.js';
-import { displayTasks } from './showTasks.js';
-import { TasksClass } from './tasksClass.js';
+import { TasksClass } from './tasksClass.js'
 
-export const removeTask = (btnIndex) => {
-  const remTask = new TasksClass();
-  remTask.taskRemover(btnIndex);
-  displayTasks();
+// change dot icons btn to type trash btn
+export const removeATask = () => {
+  const removeBtn = document.querySelectorAll('.remove-btn');
+  removeBtn.forEach((value, valIndex) => {
+    value.addEventListener('mouseover', (e) => {
+      value.classList.toggle('bi-trash');
+    });
+    value.addEventListener('mouseout', (e) => {
+      value.classList.toggle('bi-trash');
+    });
+    value.addEventListener('click', () => {
+      const remTask = new TasksClass();
+      remTask.taskRemover(valIndex);
+      value.parentNode.remove();
+    });
+  });
 };
 
-export default removeTask;
+export default removeATask;

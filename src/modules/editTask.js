@@ -4,7 +4,7 @@ import { TasksClass } from './tasksClass.js';
 export const editTask = () => {
   //  get the elements
   const editElement = document.querySelectorAll('.task-text');
-  const editTask = new TasksClass();
+  const eTask = new TasksClass();
   // get index and text content by iterating
   editElement.forEach((el, elIndex) => {
     // functions for editing
@@ -14,7 +14,7 @@ export const editTask = () => {
     };
     const taskUpdate1 = () => {
       const taskItemInput = el.innerText;
-      editTask.taskEditor(elIndex, taskItemInput);
+      eTask.taskEditor(elIndex, taskItemInput);
     };
     const taskUpdate2 = () => el.setAttribute('contenteditable', 'true');
     // events
@@ -24,4 +24,4 @@ export const editTask = () => {
   });
 };
 
-export { editTask as default };
+export default editTask;

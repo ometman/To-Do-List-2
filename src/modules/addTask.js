@@ -1,25 +1,20 @@
 import { TasksClass } from './tasksClass.js';
-import { displayTasks } from './showTasks.js';
-import { retainCheck } from './taskStatus.js';
+// import { retainCheck } from './taskStatus.js';
 
 // add new task by click event
 export const addNewTask = () => {
-  //  get the form from the main content
+//  get the form from the main content
   const newTaskForm = document.querySelector('#new-task-form');
   const taskItem = document.querySelector('#task-input');
   const newTask = document.querySelector('#task-input-return');
   // using mouse click on btn
   newTask.addEventListener('click', (e) => {
     e.preventDefault();
-
+    const todoTasks = new TasksClass();
     if (taskItem.value !== '') {
       const taskText = taskItem.value;
-      // the add function from the task class, call reload at addTask before reset from
-      // no need for displayAllTasks() here
-      const todoTasks = new TasksClass();
       todoTasks.addATask(taskText);
-      displayTasks();
-      retainCheck();
+      // retainCheck();
       newTaskForm.reset();
     }
   });

@@ -12,31 +12,19 @@ export class TasksClass {
 
   isEmptyCollection = () => this.taskCount === 0;
 
-  //  add task method: declaring the object variables and assign the values to them
-  //  the task class is assigned as an object property of the class. Do page reload after adding.
   addATask = (taskText) => {
     const tC = this.taskCollection;
-    // const theIndex = tC.length + 1;
     tC.push({
       taskIndex: this.newTaskIndex(), taskDescription: taskText, taskCompletion: false,
     });
     tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
     localStorage.setItem('taskList', JSON.stringify(tC));
-  }
-
-  displayAllTasks = () => {
-    const tC = this.taskCollection;
-    // get the task container for iteration and declare it empty
-    const displayContainer = document.querySelector('#task-container');
-    displayContainer.innerHTML = '';
-    // now start loop - prevents duplication and single content scenio
-    tC.forEach((tcTask, tcTaskIndex) => {
-      const taskContainer = document.createElement('div');
-      taskContainer.classList = 'display-container, row px-2 ms-0 me-0';
-      const i = tcTaskIndex;
-      // displayContainer.id = i + 1;
-      taskContainer.innerHTML = ` 
-      <!--check input col-->
+   const displayContainer = document.querySelector('#display-container');
+    const taskContainer = document.createElement('div');
+      taskContainer.classList = 'task-container, row px-2 ms-0 me-0';
+      taskContainer.id = '${this.newTaskIndex()}';
+      taskContainer.innerHTML = `
+      <!--checkbox input col-->
       <div class="col-1">
       <!-- task selection form-->
       <form action="task-select-form" class="task-select-form d-flex justify-content-start align-items-center">
@@ -44,27 +32,52 @@ export class TasksClass {
       <input id="task-select-input" class="form-check-input task-select-input" type="checkbox"/>
       </form>
       </div>
-      <!--id task list-->
+      <!--task list-->
       <div class="col-10">
-      <p id="task-text" class="task-text">${tC[i].taskDescription}</p>
+      <p id="task-text" class="task-text">${taskText}</p>
       </div>
-      <!--move and drop-drop-down btn-->
-      <i id="remove-btn"class="remove-btn bi bi-three-dots-vertical btn btn-sm col-1"></i>`;
-      displayContainer.appendChild(taskContainer);
+      <!-- delete and drag btn-->
+      <button id="remove-btn" class="remove-btn bi bi-three-dots-vertical btn btn-sm col-1"></button>`;
+      displayContainer.appendChild(taskContainer); 
+      this.displayAllTasks();
+  }
+
+  displayAllTasks = () => {
+    const tC = JSON.parse(localStorage.getItem('taskList'))
+    // empty container
+    const displayContainer = document.querySelector('#display-container');
+    displayContainer.innerHTML = '';
+    // begin loop
+    tC.forEach((tcTask, tcTaskIndex) => {
+      displayContainer.innerHTML += ` 
+      <div id="${tcTaskIndex}" class="task-container row px-2 ms-0 me-0">
+        <!--checkbox input col-->
+        <div class="col-1">
+        <!-- task selection form-->
+        <form action="task-select-form" class="task-select-form d-flex justify-content-start align-items-center">
+        <label id="task-select" for="task-select-input"> Select a task</label>
+        <input id="task-select-input" class="form-check-input task-select-input" type="checkbox"/>
+        </form>
+        </div>
+        <!--task list-->
+        <div class="col-10">
+        <p id="task-text" class="task-text">${tcTask.taskDescription}</p>
+        </div>
+        <!-- delete and drag btn-->
+        <button id="remove-btn" class="remove-btn bi bi-three-dots-vertical btn btn-sm col-1"></button>
+      </div>`;
     });
-  } // show all tasks
+  } // showing all tasks
 
   taskRemover = (btnIndex) => {
-    const tC = this.taskCollection;
-    // remove by splicing
-    tC.splice(btnIndex, 1);
+    const tC = this.taskCollection.filter((task) => task.taskIndex !== btnIndex + 1);
     // rearrange by sorting using their index
     tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
-    // reassign task index by iterations
+    // sorting changed indexes, reassign task index by iterations
     tC.forEach((taskItem, taskItemIndex) => {
       taskItem.taskIndex = taskItemIndex + 1;
     });
-    localStorage.setItem('taskList', JSON.stringify(this.taskCollection));
+    localStorage.setItem('taskList', JSON.stringify(tC));
   }
 
   taskEditor(elIndex, taskItemInput) {
@@ -96,4 +109,4 @@ export class TasksClass {
   // access and show local storage data
 }
 
-export { TasksClass as default };
+export default TasksClass;

@@ -1,53 +1,28 @@
 // Import our custom CSS
 import '../scss/styles.scss';
 
-// Import all of Bootstrap's JS
-import * as bootstrap from 'bootstrap';
-
-// import { TasksClass } from '../modules/tasksClass.js'
+import { appInterface } from '../modules/interface.js'
 import { displayTasks } from '../modules/showTasks.js';
 import { addNewTask } from '../modules/addTask.js';
-import { removeTask } from '../modules/removeTask.js';
-import { changeIcon } from '../modules/changeIcon.js';
+import { removeATask } from '../modules/removeTask.js';
 import { editTask } from '../modules/editTask.js';
-import { markComplete } from '../modules/markCompleted.js';
-import { clearComplete } from '../modules/clearCompleted.js';
-import { retainCheck } from '../modules/taskStatus.js';
 
-window.onload = () => {
+  appInterface();
+
   // refresh page by refresh icon btn
   const refreshPage = document.querySelector('#refresh-page-btn');
   refreshPage.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log('Check refresh js');
-
     window.location.reload();
   });
 
   // display tasks
   displayTasks();
-  // status
-  retainCheck();
-
-  // task removal
-  const removeBtn = document.querySelectorAll('.remove-btn');
-  removeBtn.forEach((btn, btnIndex) => {
-    btn.addEventListener('click', () => {
-      removeTask(btnIndex);
-    });
-  });
-
-  console.log("Check entry js");
-  // editing tasking
-  editTask();
   // adding new task
   addNewTask();
-  // complete task
-  markComplete();
-  // clear complete task
-  clearComplete();
+  // remove task
+  removeATask()
+  // editing tasking
+  editTask();
   // change icon on hover
-  changeIcon();
-};
-
-export { bootstrap as default };
+   changeIcon();
