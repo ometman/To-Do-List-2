@@ -6,6 +6,9 @@ import { displayTasks } from '../modules/showTasks.js';
 import { addNewTask } from '../modules/addTask.js';
 import { removeATask } from '../modules/removeTask.js';
 import { editTask } from '../modules/editTask.js';
+import { markComplete } from '../modules/markCompleted.js';
+import { clearComplete } from '../modules/clearCompleted.js';
+import { retainCheck } from '../modules/taskStatus.js';
 
 appInterface();
 
@@ -24,3 +27,9 @@ addNewTask();
 removeATask();
 // editing tasking
 editTask();
+// status
+retainCheck();
+// complete task
+markComplete();
+// clear complete task
+clearComplete();
