@@ -1,9 +1,9 @@
 export const appInterface = () => {
-    const mainContainer = document.querySelector("#app-main-container");
-    const appContainer = document.createElement('div');
-    appContainer.id = 'app-container';
-    appContainer.classList = 'container-fluid row mx-auto bg-white border border-1 shadow d-flex justify-content-center';
-    appContainer.innerHTML = `
+  const mainContainer = document.querySelector('#app-main-container');
+  const appContainer = document.createElement('div');
+  appContainer.id = 'app-container';
+  appContainer.classList = 'container-fluid row mx-auto bg-white border border-1 shadow d-flex justify-content-center';
+  appContainer.innerHTML = `
         <!--header cols for title and refresh-->
         <div class="row p-2 d-flex justify-content-between align-items-center">
           <!--title col-->
@@ -34,7 +34,7 @@ export const appInterface = () => {
           </div>
         </div>
       </div>`;
-      mainContainer.appendChild(appContainer);
-}
+  mainContainer.appendChild(appContainer);
+};
 
 export default appInterface;

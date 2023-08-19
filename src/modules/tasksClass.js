@@ -19,11 +19,11 @@ export class TasksClass {
     });
     tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
     localStorage.setItem('taskList', JSON.stringify(tC));
-   const displayContainer = document.querySelector('#display-container');
+    const displayContainer = document.querySelector('#display-container');
     const taskContainer = document.createElement('div');
-      taskContainer.classList = 'task-container, row px-2 ms-0 me-0';
-      taskContainer.id = '${this.newTaskIndex()}';
-      taskContainer.innerHTML = `
+    taskContainer.classList = 'task-container, row px-2 ms-0 me-0';
+    taskContainer.id = `${this.newTaskIndex()}`;
+    taskContainer.innerHTML = `
       <!--checkbox input col-->
       <div class="col-1">
       <!-- task selection form-->
@@ -38,12 +38,12 @@ export class TasksClass {
       </div>
       <!-- delete and drag btn-->
       <button id="remove-btn" class="remove-btn bi bi-three-dots-vertical btn btn-sm col-1"></button>`;
-      displayContainer.appendChild(taskContainer); 
-      this.displayAllTasks();
+    displayContainer.appendChild(taskContainer);
+    this.displayAllTasks();
   }
 
   displayAllTasks = () => {
-    const tC = JSON.parse(localStorage.getItem('taskList'))
+    const tC = JSON.parse(localStorage.getItem('taskList'));
     // empty container
     const displayContainer = document.querySelector('#display-container');
     displayContainer.innerHTML = '';

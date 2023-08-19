@@ -1,13 +1,13 @@
-import { TasksClass } from './tasksClass.js'
+import { TasksClass } from './tasksClass.js';
 
 // change dot icons btn to type trash btn
 export const removeATask = () => {
   const removeBtn = document.querySelectorAll('.remove-btn');
   removeBtn.forEach((value, valIndex) => {
-    value.addEventListener('mouseover', (e) => {
+    value.addEventListener('mouseover', () => {
       value.classList.toggle('bi-trash');
     });
-    value.addEventListener('mouseout', (e) => {
+    value.addEventListener('mouseout', () => {
       value.classList.toggle('bi-trash');
     });
     value.addEventListener('click', () => {
