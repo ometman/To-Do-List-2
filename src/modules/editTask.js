@@ -21,6 +21,13 @@ export const editTask = () => {
     el.addEventListener('dblclick', editContent, false);
     el.addEventListener('input', taskUpdate1, false);
     el.addEventListener('keydown', taskUpdate2, false);
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        el.setAttribute('contenteditable', 'false');
+        el.style.backgroundColor = '#fff';
+      }
+    });
   });
 };
 
