@@ -14,7 +14,6 @@ export const addNewTask = () => {
       const taskText = taskItem.value;
       todoTasks.addATask(taskText);
       todoTasks.displayAllTasks();
-      window.location.reload();
       newTaskForm.reset();
     }
   });

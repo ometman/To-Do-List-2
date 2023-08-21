@@ -44,50 +44,70 @@ export class TasksClass {
           <p id="task-text" class="task-text">${tC[i].taskDescription}</p>
           </div>
           <!-- delete and drag btn-->
-          <i id="remove-btn" class="remove-btn bi bi-three-dots-vertical btn btn-sm col-1"></i>
+          <i id="${i}" class="remove-btn bi bi-three-dots-vertical btn btn-sm col-1"></i>
         </div>`;
         displayContainer.appendChild(taskContainer);
+        const removeBtn = document.querySelectorAll('.remove-btn');
+        const editElement = document.querySelectorAll('.task-text');
+        this.taskEditor(editElement);
+        this.removeEl(removeBtn);
+        this.taskRemover(removeBtn);
       }
     };
     return theTasks();
   } // showing all tasks
 
-  taskRemover = (btnIndex) => {
-    const ttC = this.taskCollection;
-    const tC = ttC.filter((task) => task.taskIndex !== btnIndex + 1);
-    // rearrange by sorting using their index
-    tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
-    // sorting changed indexes, reassign task index by iterations
-    tC.forEach((taskItem, taskItemIndex) => {
-      taskItem.taskIndex = taskItemIndex + 1;
+  removeEl = (remBtn) => {
+    remBtn.forEach((value) => {
+      value.onmouseover = () => {
+        value.classList.toggle('bi-trash');
+      };
+      value.onmouseout = () => {
+        value.classList.toggle('bi-trash');
+      };
     });
-    localStorage.setItem('taskList', JSON.stringify(tC));
+  }; // task remove event
+
+  taskRemover = (btnList) => {
+    const ttC = this.taskCollection;
+    btnList.forEach((btn, btnId) => {
+      btn.onclick = () => {
+        btn.parentNode.remove();
+        ttC.splice(ttC[btnId], 1);
+        ttC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
+        ttC.forEach((taskItem, taskItemIndex) => {
+          taskItem.taskIndex = taskItemIndex + 1;
+        });
+        localStorage.setItem('taskList', JSON.stringify(ttC));
+      };
+    });
   }
 
-  taskEditor = (elIndex, taskItemInput)=> {
+  taskEditor = (taskItem) => {
     const tC = this.taskCollection;
-    tC[elIndex].taskDescription = taskItemInput;
-    localStorage.setItem('taskList', JSON.stringify(this.taskCollection));
-  } // edit task
-
-  taskCompleted = (theElIndex, taskBoxValue) => {
-    const tC = this.taskCollection;
-    tC[theElIndex].taskCompletion = taskBoxValue;
-    localStorage.setItem('taskList', JSON.stringify(this.taskCollection));
-  } // task is marked complete
-
-  clearCompletedTask = (theElIndex) => {
-    const tC = this.taskCollection;
-    // tC.filter((task) => task.taskCompletion === false);
-    tC.splice(theElIndex, 1);
-    // rearrange by sorting using their index
-    tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
-    // reassign task index by iterations
-    tC.forEach((taskItem, taskItemIndex) => {
-      taskItem.taskIndex = taskItemIndex + 1;
+    taskItem.forEach((el, elIndex) => {
+      const editContent = () => {
+        el.setAttribute('contenteditable', 'true');
+        el.style.backgroundColor = '#ffffcb';
+      };
+      const taskUpdate1 = () => {
+        const taskItemInput = el.innerText;
+        tC[elIndex].taskDescription = taskItemInput;
+        localStorage.setItem('taskList', JSON.stringify(tC));
+      };
+      const taskUpdate2 = () => el.setAttribute('contenteditable', 'true');
+      el.addEventListener('click', editContent, false);
+      el.addEventListener('input', taskUpdate1, false);
+      el.addEventListener('keydown', taskUpdate2, false);
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          el.setAttribute('contenteditable', 'false');
+          el.style.backgroundColor = '#fff';
+        }
+      });
     });
-    localStorage.setItem('taskList', JSON.stringify(tC));
-  } // task is marked complete
+  } // edit task
 
   getLocalStorage = () => this.taskCollection;
   // access and show local storage data
