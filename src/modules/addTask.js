@@ -1,5 +1,4 @@
 import { TasksClass } from './tasksClass.js';
-// import { retainCheck } from './taskStatus.js';
 
 // add new task by click event
 export const addNewTask = () => {
@@ -14,7 +13,7 @@ export const addNewTask = () => {
     if (taskItem.value !== '') {
       const taskText = taskItem.value;
       todoTasks.addATask(taskText);
-      // retainCheck();
+      todoTasks.displayAllTasks();
       newTaskForm.reset();
     }
   });

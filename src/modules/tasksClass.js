@@ -19,94 +19,98 @@ export class TasksClass {
     });
     tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
     localStorage.setItem('taskList', JSON.stringify(tC));
-    const displayContainer = document.querySelector('#display-container');
-    const taskContainer = document.createElement('div');
-    taskContainer.classList = 'task-container, row px-2 ms-0 me-0';
-    taskContainer.id = `${this.newTaskIndex()}`;
-    taskContainer.innerHTML = `
-      <!--checkbox input col-->
-      <div class="col-1">
-      <!-- task selection form-->
-      <form action="task-select-form" class="task-select-form d-flex justify-content-start align-items-center">
-      <label id="task-select" for="task-select-input"> Select a task</label>
-      <input id="task-select-input" class="form-check-input task-select-input" type="checkbox"/>
-      </form>
-      </div>
-      <!--task list-->
-      <div class="col-10">
-      <p id="task-text" class="task-text">${taskText}</p>
-      </div>
-      <!-- delete and drag btn-->
-      <button id="remove-btn" class="remove-btn bi bi-three-dots-vertical btn btn-sm col-1"></button>`;
-    displayContainer.appendChild(taskContainer);
-    this.displayAllTasks();
   }
 
   displayAllTasks = () => {
-    const tC = JSON.parse(localStorage.getItem('taskList'));
-    // empty container
+    const tC = this.taskCollection;
     const displayContainer = document.querySelector('#display-container');
     displayContainer.innerHTML = '';
-    // begin loop
-    tC.forEach((tcTask, tcTaskIndex) => {
-      displayContainer.innerHTML += ` 
-      <div id="${tcTaskIndex}" class="task-container row px-2 ms-0 me-0">
-        <!--checkbox input col-->
-        <div class="col-1">
-        <!-- task selection form-->
-        <form action="task-select-form" class="task-select-form d-flex justify-content-start align-items-center">
-        <label id="task-select" for="task-select-input"> Select a task</label>
-        <input id="task-select-input" class="form-check-input task-select-input" type="checkbox"/>
-        </form>
-        </div>
-        <!--task list-->
-        <div class="col-10">
-        <p id="task-text" class="task-text">${tcTask.taskDescription}</p>
-        </div>
-        <!-- delete and drag btn-->
-        <button id="remove-btn" class="remove-btn bi bi-three-dots-vertical btn btn-sm col-1"></button>
-      </div>`;
-    });
+    const theTasks = () => {
+      for (let i = 0; i < tC.length; i += 1) {
+        const taskContainer = document.createElement('li');
+        taskContainer.id = `${tC[i].taskIndex}`;
+        taskContainer.classList = 'task-container row px-2 ms-0 me-0';
+        taskContainer.innerHTML = `
+          <!--checkbox input col-->
+          <div class="col-1">
+          <!-- task selection form-->
+          <form action="task-select-form" class="task-select-form d-flex justify-content-start align-items-center">
+          <label id="task-select" for="task-select-input"> Select a task</label>
+          <input id="task-select-input" class="form-check-input task-select-input" type="checkbox"/>
+          </form>
+          </div>
+          <!--task list-->
+          <div class="col-10">
+          <p id="task-text" class="task-text">${tC[i].taskDescription}</p>
+          </div>
+          <!-- delete and drag btn-->
+          <i id="${i}" class="remove-btn bi bi-three-dots-vertical btn btn-sm col-1"></i>
+        </div>`;
+        displayContainer.appendChild(taskContainer);
+        const removeBtn = document.querySelectorAll('.remove-btn');
+        const editElement = document.querySelectorAll('.task-text');
+        this.taskEditor(editElement);
+        this.removeEl(removeBtn);
+        this.taskRemover(removeBtn);
+      }
+    };
+    return theTasks();
   } // showing all tasks
 
-  taskRemover = (btnIndex) => {
-    const tC = this.taskCollection.filter((task) => task.taskIndex !== btnIndex + 1);
-    // rearrange by sorting using their index
-    tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
-    // sorting changed indexes, reassign task index by iterations
-    tC.forEach((taskItem, taskItemIndex) => {
-      taskItem.taskIndex = taskItemIndex + 1;
+  removeEl = (remBtn) => {
+    remBtn.forEach((value) => {
+      value.onmouseover = () => {
+        value.classList.toggle('bi-trash');
+      };
+      value.onmouseout = () => {
+        value.classList.toggle('bi-trash');
+      };
     });
-    localStorage.setItem('taskList', JSON.stringify(tC));
+  }; // task remove event
+
+  taskRemover = (btnList) => {
+    const ttC = this.taskCollection;
+    btnList.forEach((btn, btnId) => {
+      btn.onclick = () => {
+        btn.parentNode.remove();
+        ttC.splice(ttC[btnId], 1);
+        ttC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
+        ttC.forEach((taskItem, taskItemIndex) => {
+          taskItem.taskIndex = taskItemIndex + 1;
+        });
+        localStorage.setItem('taskList', JSON.stringify(ttC));
+      };
+    });
   }
 
-  taskEditor(elIndex, taskItemInput) {
+  taskEditor = (taskItem) => {
     const tC = this.taskCollection;
-    tC[elIndex].taskDescription = taskItemInput;
-    localStorage.setItem('taskList', JSON.stringify(this.taskCollection));
-  } // edit task
-
-  taskCompleted = (theElIndex, taskBoxValue) => {
-    const tC = this.taskCollection;
-    tC[theElIndex].taskCompletion = taskBoxValue;
-    localStorage.setItem('taskList', JSON.stringify(this.taskCollection));
-  } // task is marked complete
-
-  clearCompletedTask = (theElIndex) => {
-    const tC = this.taskCollection;
-    // tC.filter((task) => task.taskCompletion === false);
-    tC.splice(theElIndex, 1);
-    // rearrange by sorting using their index
-    tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
-    // reassign task index by iterations
-    tC.forEach((taskItem, taskItemIndex) => {
-      taskItem.taskIndex = taskItemIndex + 1;
+    taskItem.forEach((el, elIndex) => {
+      const editContent = () => {
+        el.setAttribute('contenteditable', 'true');
+        el.style.backgroundColor = '#ffffcb';
+      };
+      const taskUpdate1 = () => {
+        const taskItemInput = el.innerText;
+        tC[elIndex].taskDescription = taskItemInput;
+        localStorage.setItem('taskList', JSON.stringify(tC));
+      };
+      const taskUpdate2 = () => el.setAttribute('contenteditable', 'true');
+      el.addEventListener('click', editContent, false);
+      el.addEventListener('input', taskUpdate1, false);
+      el.addEventListener('keydown', taskUpdate2, false);
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          el.setAttribute('contenteditable', 'false');
+          el.style.backgroundColor = '#fff';
+        }
+      });
     });
-    localStorage.setItem('taskList', JSON.stringify(tC));
-  } // task is marked complete
+  } // edit task
 
   getLocalStorage = () => this.taskCollection;
   // access and show local storage data
 }
 
-export default TasksClass;
+export { TasksClass as default };
