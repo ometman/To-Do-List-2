@@ -47,12 +47,18 @@ export class TasksClass {
           <i id="${i}" class="remove-btn bi bi-three-dots-vertical btn btn-sm col-1"></i>
         </div>`;
         displayContainer.appendChild(taskContainer);
+
         const removeBtn = document.querySelectorAll('.remove-btn');
-        const editElement = document.querySelectorAll('.task-text');
-        this.taskEditor(editElement);
         this.removeEl(removeBtn);
         this.taskRemover(removeBtn);
-      }
+        const editElement = document.querySelectorAll('.task-text');
+        this.taskEditor(editElement);
+        const taskBoxEls = document.querySelectorAll('.task-select-input');
+        this.markComplete(taskBoxEls);
+        this.retainCheck(taskBoxEls);
+        // const clrCompletedBtn = document.querySelector('#clear-complete');
+        // this.clearCompletedTask(clrCompletedBtn, taskBoxEls);
+      };
     };
     return theTasks();
   } // showing all tasks
@@ -108,6 +114,56 @@ export class TasksClass {
       });
     });
   } // edit task
+
+  markComplete = (boxEls) => {
+    const tC = this.taskCollection;
+    let taskBoxValue = false;
+    boxEls.forEach((theEl, theElIndex) => {
+      // theEl.checked = true;
+      theEl.addEventListener('change', () => {
+        if (theEl.checked === true) {
+          taskBoxValue = true;
+        }
+        if (theEl.checked === false) {
+          taskBoxValue = false;
+        }
+        tC[theElIndex].taskCompletion = taskBoxValue;
+        localStorage.setItem('taskList', JSON.stringify(tC));
+      });
+    });
+  } // task is marked complete
+
+  retainCheck = (taskEls) => {
+    const tC = this.taskCollection;
+    taskEls.forEach((theEl, theElIndex) => {
+      theEl.checked = false;
+      if (tC[theElIndex].taskCompletion === true) {
+        theEl.checked = true;
+      }
+    });
+  };
+
+  clearComplete = (clrBtn, taskEls) => {
+    clrBtn.addEventListener('click', () => {
+      taskEls.forEach((theEl, theElIndex) => {
+        if (theEl.checked === true) {
+          this.clearCompletedTask(theElIndex);
+          (theEl.parentElement.parentElement.parentElement).remove();
+        }
+      });
+    });
+  };
+
+  clearCompletedTask = (theElIndex) => {
+    const tC = this.taskCollection;
+    // tC.filter((task) => task.taskCompletion === false);
+    tC.splice(theElIndex, 1);
+    tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
+    tC.forEach((taskItem, taskItemIndex) => {
+      taskItem.taskIndex = taskItemIndex + 1;
+    });
+    localStorage.setItem('taskList', JSON.stringify(tC));
+  } // task is marked complete
 
   getLocalStorage = () => this.taskCollection;
   // access and show local storage data
