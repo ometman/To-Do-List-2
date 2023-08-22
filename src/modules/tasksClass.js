@@ -56,8 +56,6 @@ export class TasksClass {
         const taskBoxEls = document.querySelectorAll('.task-select-input');
         this.markComplete(taskBoxEls);
         this.retainCheck(taskBoxEls);
-        // const clrCompletedBtn = document.querySelector('#clear-complete');
-        // this.clearCompletedTask(clrCompletedBtn, taskBoxEls);
       };
     };
     return theTasks();

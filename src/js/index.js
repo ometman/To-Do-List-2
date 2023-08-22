@@ -7,7 +7,7 @@ import * as bootstrap from 'bootstrap';
 import { appInterface } from '../modules/interface.js';
 import { TasksClass } from '../modules/tasksClass.js';
 import { addNewTask } from '../modules/addTask.js';
-// import { retainCheck } from '../modules/taskStatus.js';
+import { clearComplete } from '../modules/clearCompleted.js';
 
 appInterface();
 const showTasks = new TasksClass();
@@ -24,5 +24,8 @@ refreshPage.addEventListener('click', (e) => {
   e.preventDefault();
   window.location.reload();
 });
+
+// clear task
+clearComplete();
 
 export { bootstrap as default };
