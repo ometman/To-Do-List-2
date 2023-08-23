@@ -7,9 +7,16 @@ import * as bootstrap from 'bootstrap';
 import { appInterface } from '../modules/interface.js';
 import { TasksClass } from '../modules/tasksClass.js';
 import { addNewTask } from '../modules/addTask.js';
-import { clearComplete } from '../modules/clearCompleted.js';
 
 appInterface();
+
+// refresh page by refresh icon btn
+const refreshBtn = document.querySelector('#refresh-page-btn');
+refreshBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  window.location.reload();
+});
+
 const showTasks = new TasksClass();
 if (showTasks.getLocalStorage('taskList')) {
   showTasks.displayAllTasks();
@@ -17,15 +24,7 @@ if (showTasks.getLocalStorage('taskList')) {
 
 // adding new task
 addNewTask();
-
-// refresh page by refresh icon btn
-const refreshPage = document.querySelector('#refresh-page-btn');
-refreshPage.addEventListener('click', (e) => {
-  e.preventDefault();
-  window.location.reload();
-});
-
-// clear task
-clearComplete();
+// task status
+showTasks.retainCheck();
 
 export { bootstrap as default };

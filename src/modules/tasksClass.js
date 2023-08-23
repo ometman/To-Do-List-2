@@ -17,15 +17,17 @@ export class TasksClass {
     tC.push({
       taskIndex: this.newTaskIndex(), taskDescription: taskText, taskCompletion: false,
     });
+    tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
     localStorage.setItem('taskList', JSON.stringify(tC));
+    this.displayAllTasks();
   }
 
   displayAllTasks = () => {
     const tC = this.taskCollection;
-    tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
-
     const displayContainer = document.querySelector('#display-container');
     displayContainer.innerHTML = '';
+    const buttonContainer = document.querySelector('.bottom-container');
+    buttonContainer.innerHTML = '';
     const theTasks = () => {
       for (let i = 0; i < tC.length; i += 1) {
         const taskContainer = document.createElement('div');
@@ -51,10 +53,19 @@ export class TasksClass {
 
         const removeBtn = document.querySelectorAll('.remove-btn');
         const editElement = document.querySelectorAll('.task-text');
+        const taskBoxEls = document.querySelectorAll('#task-select-input');
         this.taskEditor(editElement);
         this.delBtn(removeBtn);
         this.taskRemover(removeBtn, i);
+        this.markComplete(taskBoxEls);
       }
+      const completeBtn = document.createElement('div');
+      completeBtn.classList = 'col-12 mx-auto  d-flex justify-content-center';
+      completeBtn.innerHTML = `
+      <button id="clear-complete" class="btn mx-auto" type="button">Clear all completed</button>`;
+      buttonContainer.appendChild(completeBtn);
+      const clearCompletedBtn = document.querySelector('#clear-complete');
+      this.clearComplete(clearCompletedBtn);
     };
     return theTasks();
   } // showing all tasks
@@ -116,8 +127,7 @@ export class TasksClass {
   markComplete = (boxEls) => {
     const tC = this.taskCollection;
     let taskBoxValue = false;
-    boxEls.forEach((theEl, theElIndex) => {
-      // theEl.checked = true;
+    Array.prototype.forEach.call(boxEls, (theEl, theElIndex) => {
       theEl.addEventListener('change', () => {
         if (theEl.checked === true) {
           taskBoxValue = true;
@@ -126,42 +136,49 @@ export class TasksClass {
           taskBoxValue = false;
         }
         tC[theElIndex].taskCompletion = taskBoxValue;
+        theEl.checked = taskBoxValue;
         localStorage.setItem('taskList', JSON.stringify(tC));
       });
     });
   } // task is marked complete
 
-  retainCheck = (taskEls) => {
-    const tC = this.taskCollection;
+  retainCheck = () => {
+    const taskEls = document.querySelectorAll('.task-select-input');
+    const checkStatus = this;
     taskEls.forEach((theEl, theElIndex) => {
       theEl.checked = false;
-      if (tC[theElIndex].taskCompletion === true) {
+      if (checkStatus.taskCollection[theElIndex].taskCompletion === true) {
         theEl.checked = true;
       }
     });
-  };
+  }; // task status check and persistence
 
-  clearComplete = (clrBtn, taskEls) => {
-    clrBtn.addEventListener('click', () => {
-      taskEls.forEach((theEl, theElIndex) => {
-        if (theEl.checked === true) {
-          this.clearCompletedTask(theElIndex);
-          (theEl.parentElement.parentElement.parentElement).remove();
-        }
-      });
-    });
-  };
-
-  clearCompletedTask = (theElIndex) => {
+  clearComplete = (clrBtn) => {
+    const taskEls = document.querySelectorAll('.task-select-input');
     const tC = this.taskCollection;
-    // tC.filter((task) => task.taskCompletion === false);
-    tC.splice(theElIndex, 1);
+    clrBtn.addEventListener('click', () => {
+      for (let i = 0; i < this.taskCount(); i += 1) {
+        if (taskEls[i].checked === true) {
+          taskEls[i].parentElement.parentElement.parentElement.remove();
+        }
+        if (tC[i].taskCompletion === true) {
+          this.clearCompletedTask();
+          window.location.reload();
+        }
+      }
+    });
+  }; // check completed task
+
+  clearCompletedTask = () => {
+    const ttC = this.taskCollection;
+    const tC = ttC.filter((task) => task.taskCompletion === false);
     tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
     tC.forEach((taskItem, taskItemIndex) => {
       taskItem.taskIndex = taskItemIndex + 1;
     });
     localStorage.setItem('taskList', JSON.stringify(tC));
-  } // task is marked complete
+    this.displayAllTasks();
+  } // delete completed task
 
   getLocalStorage = () => this.taskCollection;
   // access and show local storage data

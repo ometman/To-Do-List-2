@@ -28,10 +28,7 @@ export const appInterface = () => {
         </div>
         <!--bottom container for clearing all selected lists-->
         <div class="bottom-container row p-2 py-3 m-0 z-3">
-          <!--clear all completed btn-->
-          <div class="col-12 mx-auto  d-flex justify-content-center">
-            <button id="clear-complete" class="btn mx-auto" type="button">Clear all completed</button>
-          </div>
+          <!-- complete button here -->
         </div>
       </div>`;
   mainContainer.appendChild(appContainer);
