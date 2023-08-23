@@ -17,17 +17,18 @@ export class TasksClass {
     tC.push({
       taskIndex: this.newTaskIndex(), taskDescription: taskText, taskCompletion: false,
     });
-    tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
     localStorage.setItem('taskList', JSON.stringify(tC));
   }
 
   displayAllTasks = () => {
     const tC = this.taskCollection;
+    tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
+
     const displayContainer = document.querySelector('#display-container');
     displayContainer.innerHTML = '';
     const theTasks = () => {
       for (let i = 0; i < tC.length; i += 1) {
-        const taskContainer = document.createElement('li');
+        const taskContainer = document.createElement('div');
         taskContainer.id = `${tC[i].taskIndex}`;
         taskContainer.classList = 'task-container row px-2 ms-0 me-0';
         taskContainer.innerHTML = `
@@ -49,19 +50,16 @@ export class TasksClass {
         displayContainer.appendChild(taskContainer);
 
         const removeBtn = document.querySelectorAll('.remove-btn');
-        this.removeEl(removeBtn);
-        this.taskRemover(removeBtn);
         const editElement = document.querySelectorAll('.task-text');
         this.taskEditor(editElement);
-        const taskBoxEls = document.querySelectorAll('.task-select-input');
-        this.markComplete(taskBoxEls);
-        this.retainCheck(taskBoxEls);
-      };
+        this.delBtn(removeBtn);
+        this.taskRemover(removeBtn, i);
+      }
     };
     return theTasks();
   } // showing all tasks
 
-  removeEl = (remBtn) => {
+  delBtn = (remBtn) => {
     remBtn.forEach((value) => {
       value.onmouseover = () => {
         value.classList.toggle('bi-trash');
@@ -72,18 +70,20 @@ export class TasksClass {
     });
   }; // task remove event
 
-  taskRemover = (btnList) => {
+  taskRemover = (btnLists, id) => {
     const ttC = this.taskCollection;
-    btnList.forEach((btn, btnId) => {
-      btn.onclick = () => {
-        btn.parentNode.remove();
-        ttC.splice(ttC[btnId], 1);
-        ttC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
-        ttC.forEach((taskItem, taskItemIndex) => {
-          taskItem.taskIndex = taskItemIndex + 1;
-        });
-        localStorage.setItem('taskList', JSON.stringify(ttC));
-      };
+    Array.prototype.forEach.call(btnLists, (btnList, btnIndex) => {
+      btnList.addEventListener('click', () => {
+        if (btnIndex === id) {
+          ttC.splice(btnIndex, 1);
+          ttC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
+          ttC.forEach((taskItem, taskItemIndex) => {
+            taskItem.taskIndex = taskItemIndex + 1;
+          });
+          localStorage.setItem('taskList', JSON.stringify(ttC));
+          this.displayAllTasks();
+        }
+      });
     });
   }
 
