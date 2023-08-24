@@ -19,15 +19,18 @@ export class TasksClass {
     });
     tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
     localStorage.setItem('taskList', JSON.stringify(tC));
+    this.displayAllTasks();
   }
 
   displayAllTasks = () => {
     const tC = this.taskCollection;
     const displayContainer = document.querySelector('#display-container');
     displayContainer.innerHTML = '';
+    const buttonContainer = document.querySelector('.bottom-container');
+    buttonContainer.innerHTML = '';
     const theTasks = () => {
       for (let i = 0; i < tC.length; i += 1) {
-        const taskContainer = document.createElement('li');
+        const taskContainer = document.createElement('div');
         taskContainer.id = `${tC[i].taskIndex}`;
         taskContainer.classList = 'task-container row px-2 ms-0 me-0';
         taskContainer.innerHTML = `
@@ -47,17 +50,27 @@ export class TasksClass {
           <i id="${i}" class="remove-btn bi bi-three-dots-vertical btn btn-sm col-1"></i>
         </div>`;
         displayContainer.appendChild(taskContainer);
+
         const removeBtn = document.querySelectorAll('.remove-btn');
         const editElement = document.querySelectorAll('.task-text');
+        const taskBoxEls = document.querySelectorAll('#task-select-input');
         this.taskEditor(editElement);
-        this.removeEl(removeBtn);
-        this.taskRemover(removeBtn);
+        this.delBtn(removeBtn);
+        this.taskRemover(removeBtn, i);
+        this.markComplete(taskBoxEls);
       }
+      const completeBtn = document.createElement('div');
+      completeBtn.classList = 'col-12 mx-auto  d-flex justify-content-center';
+      completeBtn.innerHTML = `
+      <button id="clear-complete" class="btn mx-auto" type="button">Clear all completed</button>`;
+      buttonContainer.appendChild(completeBtn);
+      const clearCompletedBtn = document.querySelector('#clear-complete');
+      this.clearComplete(clearCompletedBtn);
     };
     return theTasks();
   } // showing all tasks
 
-  removeEl = (remBtn) => {
+  delBtn = (remBtn) => {
     remBtn.forEach((value) => {
       value.onmouseover = () => {
         value.classList.toggle('bi-trash');
@@ -68,18 +81,20 @@ export class TasksClass {
     });
   }; // task remove event
 
-  taskRemover = (btnList) => {
+  taskRemover = (btnLists, id) => {
     const ttC = this.taskCollection;
-    btnList.forEach((btn, btnId) => {
-      btn.onclick = () => {
-        btn.parentNode.remove();
-        ttC.splice(ttC[btnId], 1);
-        ttC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
-        ttC.forEach((taskItem, taskItemIndex) => {
-          taskItem.taskIndex = taskItemIndex + 1;
-        });
-        localStorage.setItem('taskList', JSON.stringify(ttC));
-      };
+    Array.prototype.forEach.call(btnLists, (btnList, btnIndex) => {
+      btnList.addEventListener('click', () => {
+        if (btnIndex === id) {
+          ttC.splice(btnIndex, 1);
+          ttC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
+          ttC.forEach((taskItem, taskItemIndex) => {
+            taskItem.taskIndex = taskItemIndex + 1;
+          });
+          localStorage.setItem('taskList', JSON.stringify(ttC));
+          this.displayAllTasks();
+        }
+      });
     });
   }
 
@@ -108,6 +123,62 @@ export class TasksClass {
       });
     });
   } // edit task
+
+  markComplete = (boxEls) => {
+    const tC = this.taskCollection;
+    let taskBoxValue = false;
+    Array.prototype.forEach.call(boxEls, (theEl, theElIndex) => {
+      theEl.addEventListener('change', () => {
+        if (theEl.checked === true) {
+          taskBoxValue = true;
+        }
+        if (theEl.checked === false) {
+          taskBoxValue = false;
+        }
+        tC[theElIndex].taskCompletion = taskBoxValue;
+        theEl.checked = taskBoxValue;
+        localStorage.setItem('taskList', JSON.stringify(tC));
+      });
+    });
+  } // task is marked complete
+
+  retainCheck = () => {
+    const taskEls = document.querySelectorAll('.task-select-input');
+    const checkStatus = this;
+    taskEls.forEach((theEl, theElIndex) => {
+      theEl.checked = false;
+      if (checkStatus.taskCollection[theElIndex].taskCompletion === true) {
+        theEl.checked = true;
+      }
+    });
+  }; // task status check and persistence
+
+  clearComplete = (clrBtn) => {
+    const taskEls = document.querySelectorAll('.task-select-input');
+    const tC = this.taskCollection;
+    clrBtn.addEventListener('click', () => {
+      for (let i = 0; i < this.taskCount(); i += 1) {
+        if (taskEls[i].checked === true) {
+          taskEls[i].parentElement.parentElement.parentElement.remove();
+        }
+        if (tC[i].taskCompletion === true) {
+          this.clearCompletedTask();
+          window.location.reload();
+        }
+      }
+    });
+  }; // check completed task
+
+  clearCompletedTask = () => {
+    const ttC = this.taskCollection;
+    const tC = ttC.filter((task) => task.taskCompletion === false);
+    tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
+    tC.forEach((taskItem, taskItemIndex) => {
+      taskItem.taskIndex = taskItemIndex + 1;
+    });
+    localStorage.setItem('taskList', JSON.stringify(tC));
+    this.displayAllTasks();
+  } // delete completed task
 
   getLocalStorage = () => this.taskCollection;
   // access and show local storage data

@@ -9,6 +9,14 @@ import { TasksClass } from '../modules/tasksClass.js';
 import { addNewTask } from '../modules/addTask.js';
 
 appInterface();
+
+// refresh page by refresh icon btn
+const refreshBtn = document.querySelector('#refresh-page-btn');
+refreshBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  window.location.reload();
+});
+
 const showTasks = new TasksClass();
 if (showTasks.getLocalStorage('taskList')) {
   showTasks.displayAllTasks();
@@ -16,12 +24,7 @@ if (showTasks.getLocalStorage('taskList')) {
 
 // adding new task
 addNewTask();
-
-// refresh page by refresh icon btn
-const refreshPage = document.querySelector('#refresh-page-btn');
-refreshPage.addEventListener('click', (e) => {
-  e.preventDefault();
-  window.location.reload();
-});
+// task status
+showTasks.retainCheck();
 
 export { bootstrap as default };

@@ -6,7 +6,7 @@ export const addNewTask = () => {
   const newTaskForm = document.querySelector('#new-task-form');
   const taskItem = document.querySelector('#task-input');
   const newTask = document.querySelector('#task-input-return');
-  // using mouse click on btn
+  // using mouse click
   newTask.addEventListener('click', (e) => {
     e.preventDefault();
     const todoTasks = new TasksClass();
@@ -17,7 +17,7 @@ export const addNewTask = () => {
       newTaskForm.reset();
     }
   });
-  // using keyboard enter key
+  // using keyboard
   taskItem.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
