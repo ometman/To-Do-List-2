@@ -27,4 +27,7 @@ describe('adding and removing a task', () => {
         expect(taskInput.value).toBe('taskname');
       });
   });
+  test('successful add task class and method calls', () => {
+    expect(addClass).toBeInstanceOf(TasksClass);
+  });
 });
