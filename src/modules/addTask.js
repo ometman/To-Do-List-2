@@ -26,4 +26,3 @@ export const addNewTask = () => {
   });
 };
 export { addNewTask as default };
-
