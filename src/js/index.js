@@ -22,9 +22,9 @@ if (showTasks.getLocalStorage('taskList')) {
   showTasks.displayAllTasks();
 } // get available tasks
 
-// adding new task
 addNewTask();
-// task status
+
+// task status persistence
 showTasks.retainCheck();
 
 export { bootstrap as default };

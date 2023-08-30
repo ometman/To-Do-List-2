@@ -19,7 +19,7 @@ export class TasksClass {
     });
     tC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
     localStorage.setItem('taskList', JSON.stringify(tC));
-    this.displayAllTasks();
+    // this.displayAllTasks();
   }
 
   displayAllTasks = () => {
