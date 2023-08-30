@@ -11,6 +11,7 @@ describe('adding and removing a task', () => {
         <button id="task-input-return" type="submit"></button>`;
   };
   addNewTask();
+  addClass.addATask();
 
   test('successful add task event call', () => {
     const taskBtn = document.querySelector('#task-input-return');
@@ -26,5 +27,4 @@ describe('adding and removing a task', () => {
         expect(taskInput.value).toBe('taskname');
       });
   });
-  
 });
