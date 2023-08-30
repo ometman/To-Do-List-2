@@ -4,18 +4,17 @@
 import { TasksClass } from './tasksClass.js';
 
 describe('adding and removing a task', () => {
-  const addClass = new TasksClass();
+  const testClass = new TasksClass();
   const addNewTask = () => {
     document.body.innerHTML = `
-        <input id="task-input" type="text" />
+        <input id="task-input" value="taskname" type="text" />
         <button id="task-input-return" type="submit"></button>`;
   };
-  addNewTask();
 
   test('successful add task event call', () => {
-    const taskBtn = document.querySelector('#task-input-return');
+    addNewTask();
     const taskInput = document.querySelector('#task-input');
-    taskInput.value = 'taskname';
+    const taskBtn = document.querySelector('#task-input-return');
     taskBtn.click();
     return Promise.resolve()
       .then(async () => {
@@ -27,74 +26,53 @@ describe('adding and removing a task', () => {
       });
   });
   test('successful add task class and method calls', () => {
-    expect(addClass).toBeInstanceOf(TasksClass);
+    expect(testClass).toBeInstanceOf(TasksClass);
   });
 
   const addTaskMock = jest
-    .spyOn(addClass, 'addATask')
+    .spyOn(testClass, 'addATask')
     .mockImplementation(() => 'mocked-addATask-method');
 
   test('successful add task class and method calls', () => {
+    addNewTask();
     const taskInput = document.querySelector('#task-input');
-    taskInput.value = 'taskname';
+    testClass.addATask(taskInput.value);
     const taskBtn = document.querySelector('#task-input-return');
-    addClass.addATask('taskInput.value');
     taskBtn.click();
     return Promise.resolve()
       .then(async () => {
         expect(addTaskMock).toHaveBeenCalled();
-      })
+      });
   });
 
-  const taskRemover = (elLists, elId) => {
-    const elLength = 6;
-    elLists = new Array(elLength);
-    let i = 0;
-    elId = i;
-
-    for (let i = 1; i <= elLists.length; i += 1) {
-      document.createElement('div').innerHTML = `
-      <button id="${i}" class="remove-btn" type="submit"></button>`;
-    }
-    document.body.appendChild()
+  const taskRemover = () => {
+    document.body.innerHTML = `
+      <button id="5" class="remove-btn" type="submit"></button>`;
   };
   taskRemover();
-  // taskRemover = (btnLists, id) => {
-  //   const ttC = this.taskCollection;
-  //   Array.prototype.forEach.call(btnLists, (btnList, btnIndex) => {
-  //     btnList.addEventListener('click', () => {
-  //       if (btnIndex === id) {
-  //         ttC.splice(btnIndex, 1);
-  //         ttC.sort((task1, task2) => task1.taskIndex - task2.taskIndex);
-  //         ttC.forEach((taskItem, taskItemIndex) => {
-  //           taskItem.taskIndex = taskItemIndex + 1;
-  //         });
-  //         localStorage.setItem('taskList', JSON.stringify(ttC));
-  //         this.displayAllTasks();
-  //       }
-  //     });
-  //   });
-  // }
-
-
-
-
-
-
-
-
   test('successful remove task event call', () => {
-    const taskBtn = document.querySelector('#task-input-return');
-    const taskInput = document.querySelector('#task-input');
-    taskInput.value = 'taskname';
-    taskBtn.click();
+    taskRemover();
+    const removeBtn = document.querySelector('.remove-btn');
+    removeBtn.click();
+    Promise.resolve()
+      .then(async () => {
+        expect(removeBtn).not.toBeNull();
+        expect(removeBtn.id).toBe('5');
+      });
+  });
+
+  const removeTaskMock = jest
+    .spyOn(testClass, 'taskRemover')
+    .mockImplementation(() => 'mocked-taskRemover-method');
+
+  test('successful remove task class and method calls', () => {
+    taskRemover();
+    const removeBtn = document.querySelector('.remove-btn');
+    testClass.taskRemover(removeBtn.length, removeBtn.id);
+    removeBtn.click();
     return Promise.resolve()
       .then(async () => {
-        expect(taskBtn).not.toBeNull();
-      })
-      .then(() => {
-        expect(taskInput.value).not.toBeNull();
-        expect(taskInput.value).toBe('taskname');
+        expect(removeTaskMock).toHaveBeenCalled();
       });
   });
 });
