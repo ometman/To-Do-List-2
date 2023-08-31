@@ -23,16 +23,16 @@ describe('editing, updating status and clearing completed task', () => {
      <li id="task-text" contenteditable="true" >${taskArr[0].description}</li>
      ul`;
   };
-  testClass();
+
   test('editable element and event call', () => {
     editTask();
     const taskEl = document.querySelector('#task-text');
     taskEl.click();
     return Promise.resolve()
-      .then(async () => {(
+      .then(async () => {
         expect(taskEl.innerText).not.toBe(null);
-        expect(taskEl.).toBe(true);
-    });
+        expect(taskEl.isContentEditable).toBe(true);
+      });
   });
 
   test('successful edit task class instance call', () => {
