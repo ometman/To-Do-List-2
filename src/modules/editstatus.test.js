@@ -23,4 +23,6 @@ describe('editing, updating status and clearing completed task', () => {
      <li id="task-text" contenteditable="true" >${taskArr[0].description}</li>
      ul`;
   };
+  editTask();
+  testClass();
 });
