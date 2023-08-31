@@ -34,4 +34,8 @@ describe('editing, updating status and clearing completed task', () => {
         expect(taskEl.).toBe(true);
     });
   });
+
+  test('successful edit task class instance call', () => {
+    expect(testClass).toBeInstanceOf(TasksClass);
+  });
 });
